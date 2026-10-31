@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explora recetas, registra donaciones y aprende a aprovechar mejor los alimentos.">
+    <title>AmbienteWebCS | Aprovecha más, desperdicia menos</title>
+    <!-- La portada tiene sus propios estilos para evitar conflictos con los formularios del sitio. -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="AmbienteWebCS, volver al inicio">
+                <span class="brand-icon" aria-hidden="true">🌱</span>
+                <span>Ambiente<span class="brand-accent">WebCS</span></span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Navegación principal">
+                <a href="recetas.html">Recetas</a>
+                <a href="donacion.html">Donaciones</a>
+                <a href="mapa.html">Puntos de recolección</a>
+                <a href="educacion.html">Aprender</a>
+            </nav>
+
+            <div class="auth-controls">
+                <a href="login.html" class="login-link" id="loginLink">Iniciar sesión</a>
+                <div id="accountArea" class="account-area" hidden>
+                    <span id="welcomeUser" class="welcome-user" aria-live="polite"></span>
+                    <form class="logout-form" action="logout.php" method="post">
+                        <input type="hidden" name="csrf_logout" id="csrfLogout">
+                        <button type="submit" class="logout-button">Cerrar sesión</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="heroTitle">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span aria-hidden="true">●</span> CONSUMO RESPONSABLE</p>
+                    <h1 id="heroTitle">Menos desperdicio.<br><span>Más alimentos aprovechados.</span></h1>
+                    <p class="hero-description">
+                        Transforma los ingredientes que ya tienes en nuevas ideas.
+                        Explora recetas, registra donaciones y descubre pequeñas
+                        acciones para cuidar los recursos.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="buscarRecetas.html" class="button button-primary">Buscar recetas <span aria-hidden="true">→</span></a>
+                        <a href="donacion.html" class="button button-secondary">Donar alimentos</a>
+                    </div>
+                </div>
+
+                <div class="hero-art" aria-hidden="true">
+                    <div class="decor-circle decor-circle-one"></div>
+                    <div class="decor-circle decor-circle-two"></div>
+                    <div class="produce-card">
+                        <span class="produce-icon">🥬</span>
+                        <span class="produce-icon">🥕</span>
+                        <span class="produce-icon">🍎</span>
+                        <div class="produce-caption">
+                            <span>Una nueva oportunidad</span>
+                            <strong>para cada ingrediente</strong>
+                        </div>
+                    </div>
+                    <div class="floating-note">♻️ Aprovechar también es cuidar</div>
+                </div>
+            </section>
+
+            <section class="features" aria-labelledby="featuresTitle">
+                <div class="section-intro">
+                    <p class="section-kicker">EXPLORA LA PLATAFORMA</p>
+                    <h2 id="featuresTitle">¿Qué te gustaría hacer hoy?</h2>
+                    <p>Encuentra el recurso que necesitas y empieza con una acción sencilla.</p>
+                </div>
+                <div class="feature-grid">
+                    <a class="feature-card" href="recetas.html">
+                        <span class="feature-icon" aria-hidden="true">🍲</span>
+                        <h3>Recetas e ingredientes</h3>
+                        <p>Busca nuevas formas de aprovechar los alimentos disponibles en casa.</p>
+                        <span class="feature-action">Explorar recetas <span aria-hidden="true">→</span></span>
+                    </a>
+                    <a class="feature-card" href="donacion.html">
+                        <span class="feature-icon" aria-hidden="true">🤝</span>
+                        <h3>Donaciones</h3>
+                        <p>Registra una donación de prueba y conoce el flujo de la plataforma.</p>
+                        <span class="feature-action">Registrar donación <span aria-hidden="true">→</span></span>
+                    </a>
+                    <a class="feature-card" href="mapa.html">
+                        <span class="feature-icon" aria-hidden="true">📍</span>
+                        <h3>Puntos de recolección</h3>
+                        <p>Consulta las ubicaciones ilustrativas incluidas en esta demostración.</p>
+                        <span class="feature-action">Explorar ubicaciones <span aria-hidden="true">→</span></span>
+                    </a>
+                    <a class="feature-card" href="educacion.html">
+                        <span class="feature-icon" aria-hidden="true">🌿</span>
+                        <h3>Educación ambiental</h3>
+                        <p>Descubre consejos prácticos sobre consumo y reducción de residuos.</p>
+                        <span class="feature-action">Aprender más <span aria-hidden="true">→</span></span>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <span>© AmbienteWebCS · Proyecto educativo</span>
+            <span>Plataforma demostrativa: las ubicaciones no están verificadas como centros de donación.</span>
+        </footer>
+    </div>
+
+    <script>
+        (async () => {
+            try {
+                const response = await fetch('session_status.php', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: { Accept: 'application/json' }
+                });
+                if (!response.ok) return;
+                const session = await response.json();
+                if (session.authenticated && typeof session.logout_csrf === 'string' && session.logout_csrf) {
+                    document.getElementById('csrfLogout').value = session.logout_csrf;
+                    document.getElementById('welcomeUser').textContent =
+                        session.display_name ? 'Hola, ' + session.display_name : 'Sesión iniciada';
+                    document.getElementById('loginLink').hidden = true;
+                    document.getElementById('accountArea').hidden = false;
+                }
+            } catch (_) {
+                // Si falla la consulta de sesión, se mantiene el enlace de inicio de sesión.
+            }
+        })();
+    </script>
+</body>
+</html>

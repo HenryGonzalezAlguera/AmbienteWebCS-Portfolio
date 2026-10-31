@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Acceso y gestión de cuenta en AmbienteWebCS, plataforma educativa de reducción de desperdicio alimentario.">
+  <title>Recuperar contraseña | AmbienteWebCS</title>
+  <link rel="stylesheet" href="interior.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body class="site-app">
+<div class="app-shell">
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="AmbienteWebCS, volver al inicio"><span class="brand-mark" aria-hidden="true">🌱</span><span>Ambiente<span class="brand-accent">WebCS</span></span></a>
+  <nav class="site-nav" aria-label="Navegación principal">
+    <a href="recetas.html">Recetas</a><a href="donacion.html">Donaciones</a>
+    <a href="mapa.html">Puntos de recolección</a><a href="educacion.html">Aprender</a>
+  </nav>
+  <div class="site-account">
+    <a id="siteLogin" href="login.html" class="login-action">Iniciar sesión</a>
+    <div id="siteSigned" class="site-account" hidden>
+      <span id="siteUser" class="user-name"></span>
+      <form action="logout.php" method="post">
+        <input type="hidden" id="siteLogoutCsrf" name="csrf_logout">
+        <button type="submit">Cerrar sesión</button>
+      </form>
+    </div>
+  </div>
+</header>
+<main class="page-container auth-main">
+<a href="login.html" class="auth-return">← Volver al inicio de sesión</a>
+<div class="auth-layout">
+<aside class="auth-visual" aria-label="Bienvenida a AmbienteWebCS">
+   <div><p class="auth-kicker">RECUPERA TU ACCESO</p><h1>Tu camino hacia el cambio <em>continúa aquí.</em></h1><p>Restablece tu contraseña de forma segura y vuelve a explorar las recetas y herramientas de la plataforma.</p></div>
+   <div class="auth-picture" aria-hidden="true"><div class="auth-produce"><div class="auth-produce-icons"><span>🔐</span><span>🌱</span><span>✉️</span></div><strong>Protegemos el acceso a tu cuenta</strong></div><div class="auth-sticker">♻️ Aprovechar también es cuidar</div></div>
+   <div class="auth-visual-foot"><span aria-hidden="true">✦</span><span>Una comunidad con propósito</span></div>
+ </aside>
+<section class="auth-form-area" aria-labelledby="resetTitle">
+  <div class="auth-form-content">
+    <p class="auth-form-label">SEGURIDAD DE TU CUENTA</p>
+    <h2 id="resetTitle">Recupera tu acceso</h2>
+    <p class="auth-form-lede">Introduce el correo electrónico de tu cuenta. Si está registrado, recibirás instrucciones para restablecer tu contraseña.</p>
+    <form action="recuperar_contrasena.php" method="post" class="ui-form">
+      <div class="form-field"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" placeholder="tu@correo.com" autocomplete="email" required></div>
+      <button type="submit" class="primary">Enviar instrucciones <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-help">El enlace de recuperación tiene una vigencia de 30 minutos. Revisa también tu carpeta de correo no deseado.</p>
+    <div class="auth-divider">¿Recordaste tu contraseña?</div>
+    <a class="auth-secondary-link" href="login.html">Volver al inicio de sesión</a>
+    <p class="auth-security"><span aria-hidden="true">🔒</span><span>Por privacidad, no confirmamos públicamente si una cuenta existe.</span></p>
+  </div>
+</section>
+</div>
+</main>
+<footer class="site-footer"><span>© AmbienteWebCS · Proyecto educativo</span><span>Una plataforma para aprovechar mejor los alimentos</span></footer>
+</div>
+<script src="site.js" defer></script>
+<script src="auth.js" defer></script>
+</body></html>

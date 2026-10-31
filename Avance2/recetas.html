@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Recetas | AmbienteWebCS</title><link rel="stylesheet" href="interior.css"></head><body class="site-app"><div class="app-shell"><header class="site-header"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">🌱</span><span>Ambiente<span class="brand-accent">WebCS</span></span></a><nav class="site-nav" aria-label="Navegación principal"><a href="recetas.html" aria-current="page">Recetas</a><a href="donacion.html">Donaciones</a><a href="mapa.html">Puntos de recolección</a><a href="educacion.html">Aprender</a></nav><div class="site-account"><a id="siteLogin" href="login.html" class="login-action">Iniciar sesión</a><div id="siteSigned" class="site-account" hidden><span id="siteUser" class="user-name"></span><form action="logout.php" method="post"><input type="hidden" id="siteLogoutCsrf" name="csrf_logout"><button type="submit">Cerrar sesión</button></form></div></div></header><main class="page-container">
+  <a class="return-link" href="index.html">← Volver al inicio</a>
+  <section class="page-hero" aria-labelledby="recipesHeading">
+    <div class="hero-copy">
+      <p class="eyebrow">COCINA CON PROPÓSITO</p>
+      <h1 id="recipesHeading">Recetas que transforman <em>tus ingredientes.</em></h1>
+      <p class="lede">Encuentra ideas fáciles para aprovechar lo que ya tienes en casa. Busca preparaciones, explora ingredientes y comparte tus propias recetas.</p>
+      <div class="actions">
+        <a href="buscarRecetas.html" class="button-primary">Buscar una receta →</a>
+        <a href="nuevaReceta.html" class="button-secondary">Compartir una receta</a>
+      </div>
+    </div>
+    <div class="hero-illustration" aria-hidden="true">
+      <div class="hero-illustration-card">
+        <div class="hero-emoji-row"><span>🥕</span><span>🥬</span><span>🍲</span></div>
+        <small>Ideas para tu cocina</small>
+        <strong>Un ingrediente, nuevas posibilidades</strong>
+      </div>
+      <div class="hero-mini-note">🌿 Aprovecha más cada día</div>
+    </div>
+  </section>
+  <section aria-labelledby="recipesOptions">
+    <div class="section-heading"><div><p class="eyebrow">TU COCINA, TUS OPCIONES</p><h2 id="recipesOptions">¿Por dónde quieres empezar?</h2></div><p>Explora las herramientas de la plataforma</p></div>
+    <div class="grid">
+      <a class="feature-link" href="buscarRecetas.html">
+        <span class="tile-icon" aria-hidden="true">🔎</span><h2>Buscar recetas</h2>
+        <p>Escribe un ingrediente disponible y descubre recetas que lo incluyen.</p>
+        <span class="card-arrow">Buscar ahora →</span>
+      </a>
+      <a class="feature-link" href="categorias.html">
+        <span class="tile-icon" aria-hidden="true">🥦</span><h2>Explorar ingredientes</h2>
+        <p>Encuentra ideas a partir de alimentos como zanahoria, arroz o frutas.</p>
+        <span class="card-arrow">Explorar ideas →</span>
+      </a>
+      <a class="feature-link" href="recetas_populares.php">
+        <span class="tile-icon" aria-hidden="true">🍽️</span><h2>Recetas recientes</h2>
+        <p>Conoce las últimas preparaciones incorporadas a nuestra colección.</p>
+        <span class="card-arrow">Ver preparaciones →</span>
+      </a>
+      <a class="feature-link" href="nuevaReceta.html">
+        <span class="tile-icon" aria-hidden="true">✍️</span><h2>Compartir una receta</h2>
+        <p>Agrega ingredientes e instrucciones para que otros aprovechen sus alimentos.</p>
+        <span class="card-arrow">Crear receta →</span>
+      </a>
+    </div>
+  </section>
+  <div class="tip-banner">
+    <div><h2>Una buena receta puede reducir el desperdicio</h2><p>Planifica tus comidas y utiliza ingredientes que aún estén en condiciones seguras de consumo.</p></div>
+    <a href="educacion.html" class="button-secondary">Ver consejos →</a>
+  </div>
+</main><footer class="site-footer"><span>© AmbienteWebCS · Proyecto educativo</span><span>Demostración de reducción de desperdicio alimentario</span></footer></div><script src="site.js" defer></script></body></html>

@@ -1,0 +1,203 @@
+/* AmbienteWebCS — interior design system. CSS scoped by .site-app to avoid legacy overrides. */
+:root{--forest:#173b32;--green:#18744c;--green-dark:#105d3e;--mint:#edf7ed;--cream:#f8fbf8;--soft:#536b61;--line:#dce9de;--white:#fff;--danger:#a6332d}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body.site-app{margin:0;min-height:100vh;background:var(--cream);color:var(--forest);font:16px/1.6 "Segoe UI",system-ui,-apple-system,sans-serif}
+.site-app a{color:var(--green)}
+.site-app a:focus-visible,.site-app button:focus-visible,.site-app input:focus-visible,.site-app textarea:focus-visible,.site-app select:focus-visible{outline:3px solid #5bab80;outline-offset:3px}
+.site-app [hidden]{display:none!important}
+.site-header{display:flex;align-items:center;gap:22px;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--line);padding:18px clamp(18px,5vw,70px)}
+.brand{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-weight:800;font-size:20px;letter-spacing:-.6px;text-decoration:none!important;color:var(--forest)!important}
+.brand-mark{background:#e4f4e9;padding:8px;border-radius:11px;line-height:1.3}
+.brand-accent{color:var(--green)}
+.site-nav{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.site-nav a{font-weight:650;font-size:14px;text-decoration:none;color:#36584a}
+.site-nav a:hover,.site-nav a[aria-current=page]{color:var(--green);text-decoration:underline;text-underline-offset:5px}
+.site-account{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.site-account .user-name{color:var(--forest);font-size:12px;font-weight:700;max-width:210px;overflow-wrap:anywhere}
+.site-account form{display:inline;margin:0;padding:0;border:0;background:transparent;box-shadow:none;width:auto}
+.site-account button,.site-account .login-action{border:1px solid #b9d6c3;background:var(--white);color:var(--green-dark);border-radius:9px;padding:8px 13px;font-size:13px;cursor:pointer;font-weight:700;text-decoration:none}
+.site-account button:hover,.site-account .login-action:hover{background:var(--mint)}
+.page-container{width:min(100% - 36px,1080px);margin:0 auto;padding:50px 0 84px;flex:1}
+.page-narrow{width:min(100% - 36px,660px)}
+.site-app h1,.site-app h2,.site-app h3{line-height:1.22;letter-spacing:-.6px}
+.site-app h1{font-size:clamp(30px,3.8vw,46px);margin:10px 0 18px}
+.site-app h2{font-size:clamp(22px,2.5vw,30px)}
+.site-app h3{font-size:19px}
+.eyebrow{font-size:12px;letter-spacing:1.6px;font-weight:800;color:var(--green);text-transform:uppercase;margin:0}
+.lede{font-size:17px;color:var(--soft);line-height:1.8;max-width:750px}
+.page-intro{margin:0 0 32px}
+.breadcrumb{display:inline-block;font-size:14px;font-weight:650;text-decoration:none;margin-bottom:14px}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:clamp(22px,4vw,36px);box-shadow:0 12px 35px rgba(20,73,48,.045)}
+.panel + .panel{margin-top:20px}
+.panel h2:first-child,.panel h3:first-child{margin-top:0}
+.ui-form{display:grid;gap:15px;max-width:none;margin:0}
+.form-field{display:grid;gap:7px}
+.ui-form label{font-weight:700;font-size:14px}
+.ui-form input,.ui-form textarea,.ui-form select,.search-select{width:100%;padding:12px 14px;border:1px solid #c7d9ce;border-radius:10px;background:#fff;color:var(--forest);font:inherit;min-height:46px}
+.ui-form textarea{min-height:145px;resize:vertical}
+.form-hint{font-size:13px;color:var(--soft)}
+.site-app button.primary,.site-app .button-primary{display:inline-flex;justify-content:center;align-items:center;gap:8px;background:var(--green);border:1px solid var(--green);color:#fff;padding:12px 20px;min-height:46px;border-radius:10px;cursor:pointer;font:700 14px "Segoe UI",system-ui,sans-serif;text-decoration:none}
+.site-app button.primary:hover,.site-app .button-primary:hover{background:var(--green-dark)}
+.site-app .button-secondary{display:inline-flex;justify-content:center;align-items:center;min-height:46px;background:#fff;border:1px solid #c6dacb;color:var(--green);padding:12px 20px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;align-items:center}
+.text-center{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:18px}
+.feature-link{display:flex;flex-direction:column;gap:11px;text-decoration:none!important;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 8px 22px rgba(20,73,48,.04);transition:transform .18s,border-color .18s}
+.feature-link:hover{transform:translateY(-3px);border-color:#9fcbb2}
+.feature-link h2,.feature-link h3{margin:0;color:var(--forest)}
+.feature-link p{margin:0;color:var(--soft);font-size:14px}
+.feature-link strong{font-size:13px;margin-top:auto}
+.tile-icon{display:grid;place-items:center;width:54px;height:54px;font-size:26px;background:var(--mint);border-radius:14px}
+.content-list{display:grid;gap:16px}
+.recipe-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px}
+.recipe-card h2,.recipe-card h3{margin:0 0 8px}
+.recipe-card p{color:var(--soft);margin:0 0 10px}
+.alert{padding:13px 16px;border-radius:11px;border:1px solid #c1deca;background:#edf7ef;color:#18563b;margin:10px 0}
+.alert.error{color:var(--danger);border-color:#f0cfcc;background:#fff3f1}
+.alert:empty{display:none}
+.info-strip{margin:18px 0;padding:16px 20px;border:1px solid #d4e7d8;background:#edf7ef;border-radius:12px;color:#315b43;font-size:14px}
+.site-footer{border-top:1px solid var(--line);background:#fff;color:var(--soft);font-size:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;padding:22px clamp(18px,5vw,70px)}
+.app-shell{min-height:100vh;display:flex;flex-direction:column}
+.link-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px;margin-top:18px}
+.info-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.info-columns ul{padding-left:20px}
+.map-result iframe{display:block;width:100%;height:360px;border:0;border-radius:12px;margin:16px 0}
+.map-result h3{margin-bottom:5px}
+.site-app .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:980px){.site-header{flex-wrap:wrap}.site-nav{order:3;width:100%;justify-content:flex-start}.site-account{margin-left:auto}}
+@media(max-width:600px){.site-header{padding:18px}.site-nav{gap:10px 16px}.site-account{width:100%;margin-left:0}.page-container{padding:32px 0 55px}.panel{padding:22px}.site-footer{padding:18px}.site-app h1{letter-spacing:-1px}}
+
+
+/* ============================================================
+   Diseño interior v2 — misma jerarquía visual que la portada.
+   Los cambios son aditivos: formularios y páginas PHP anteriores
+   siguen utilizando las clases compartidas.
+   ============================================================ */
+:root{--hero-soft:#e4f3e8;--hero-accent:#d2ebda;--gold:#e9f2d7;--shadow:0 16px 45px rgba(29,86,59,.07)}
+body.site-app{font-size:17px;line-height:1.65}
+.site-header{max-width:1460px;margin:0 auto;padding:22px clamp(24px,5vw,74px);min-height:90px}
+.brand{font-size:22px}
+.site-nav{gap:clamp(14px,2.2vw,30px)}
+.site-nav a{font-size:15px}
+.site-account .user-name{font-size:13px}
+.site-app .page-container{width:min(calc(100% - 52px),1200px);padding:48px 0 92px}
+.site-app .page-narrow{max-width:750px}
+.site-app h1{font-size:clamp(35px,3.8vw,56px);line-height:1.14;letter-spacing:-1.8px}
+.site-app h2{font-size:clamp(24px,2.7vw,34px);line-height:1.24;letter-spacing:-.8px}
+.site-app h3{font-size:21px;letter-spacing:-.4px}
+.site-app .lede{font-size:18px;line-height:1.78}
+.site-app .breadcrumb{font-size:15px;font-weight:700}
+.site-app .panel{box-shadow:var(--shadow);border-radius:20px}
+.site-app .feature-link{padding:30px;gap:14px;min-height:270px;border-radius:19px;box-shadow:var(--shadow)}
+.site-app .feature-link h2{font-size:23px}
+.site-app .feature-link p{font-size:16px;line-height:1.7}
+.site-app .feature-link strong{font-size:15px}
+.site-app .tile-icon{width:64px;height:64px;border-radius:18px;font-size:31px}
+.site-app .ui-form{gap:20px}
+.site-app .ui-form label{font-size:16px}
+.site-app .ui-form input,.site-app .ui-form textarea,.site-app .ui-form select{font-size:16px;padding:14px 16px;border-radius:12px;min-height:52px}
+.site-app .ui-form textarea{min-height:155px}
+.site-app .form-hint{font-size:14px}
+.site-app .button-primary,.site-app .button-secondary,.site-app button.primary{min-height:50px;padding:13px 24px;font-size:15px}
+.site-app .info-strip{font-size:15px;line-height:1.65}
+.site-app .page-intro{margin-bottom:36px}
+.site-app .grid{gap:22px}
+.site-app .recipe-card{padding:27px}
+.site-app .site-footer{font-size:13px}
+
+/* Encabezado editorial con ilustración y resumen visual */
+.page-hero{
+  position:relative;overflow:hidden;isolation:isolate;
+  display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);
+  align-items:center;gap:35px;
+  min-height:330px;padding:clamp(32px,5vw,60px);
+  border:1px solid #d6e9da;border-radius:25px;
+  background:linear-gradient(115deg,#eff8ed 0%,#e2f2e7 68%,#d8ece2 100%);
+  margin-bottom:38px;
+}
+.page-hero:before,.page-hero:after{position:absolute;content:"";border-radius:50%;z-index:-1}
+.page-hero:before{width:310px;height:310px;background:rgba(153,202,167,.27);right:1%;top:-65px}
+.page-hero:after{width:220px;height:220px;background:rgba(250,253,232,.58);right:16%;bottom:-110px}
+.hero-copy{max-width:720px;z-index:1}
+.hero-copy .eyebrow{margin-bottom:16px;letter-spacing:1.4px}
+.hero-copy h1{margin:0 0 20px}
+.hero-copy h1 em{font-style:normal;color:var(--green)}
+.hero-copy .lede{margin:0 0 23px;color:#4a6658}
+.hero-illustration{min-height:210px;display:grid;place-items:center;position:relative}
+.hero-illustration-card{
+  width:min(100%,335px);min-height:180px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;gap:10px;text-align:center;
+  padding:24px;background:#fff;border:1px solid #e2edde;border-radius:23px;
+  box-shadow:0 23px 55px rgba(17,65,40,.13);transform:rotate(-3deg)
+}
+.hero-emoji-row{display:flex;justify-content:center;gap:12px;font-size:42px}
+.hero-emoji-row span{display:grid;place-items:center;width:70px;height:70px;border-radius:17px;background:#edf6ed}
+.hero-illustration-card strong{font-size:19px;line-height:1.3;color:var(--forest)}
+.hero-illustration-card small{font-size:13px;color:var(--soft)}
+.hero-mini-note{position:absolute;bottom:0;right:0;max-width:190px;padding:12px 15px;background:white;border-radius:11px;box-shadow:0 8px 26px rgba(17,65,40,.11);font-weight:750;font-size:13px}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:35px 0 22px}
+.section-heading h2{margin:6px 0 0}
+.section-heading p{color:var(--soft);margin:0}
+.section-heading a{text-decoration:none;font-size:15px;font-weight:750}
+.feature-link .card-arrow{margin-top:auto;font-weight:800;color:var(--green);font-size:15px}
+.section-slab{padding:28px 32px;border:1px solid #d9e6dc;background:#f0f8f1;border-radius:19px}
+.section-slab h2{margin:0 0 12px}
+.section-slab p{margin:0;color:var(--soft)}
+.form-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:25px;align-items:start}
+.form-layout .panel{margin:0}
+.form-side{display:grid;gap:18px}
+.form-side .panel{background:linear-gradient(160deg,#f2f9f1,#e8f4ea)}
+.form-side .panel h2{font-size:24px}
+.form-side ul{padding-left:22px;margin-bottom:0}
+.form-side li{margin:9px 0}
+.form-side .tile-icon{margin-bottom:14px}
+.stats-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.stat-tile{border-radius:13px;background:#fff;border:1px solid #d9e8dc;padding:18px 16px}
+.stat-tile strong{display:block;font-size:27px;color:var(--green);line-height:1.2}
+.stat-tile span{font-size:14px;color:var(--soft)}
+.learning-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.learning-card{padding:30px;border-radius:19px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.learning-card .tile-icon{margin-bottom:14px}
+.learning-card h2{margin:0 0 12px;font-size:23px}
+.learning-card p{margin:0 0 12px;color:var(--soft);font-size:16px}
+.learning-card ul{margin:0;padding-left:21px}
+.learning-card li{padding:4px 0;font-size:16px}
+.site-app .return-link{display:inline-flex;align-items:center;gap:9px;margin:0 0 25px;font-size:15px;font-weight:750;text-decoration:none;color:var(--green)}
+.site-app .return-link:hover{text-decoration:underline;text-underline-offset:5px}
+.pill-note{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #cce2d2;color:#20633f;border-radius:999px;font-size:14px;font-weight:700;padding:8px 14px}
+.tip-banner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 34px;margin-top:32px;border-radius:19px;background:#173e32;color:#fff}
+.tip-banner h2{font-size:23px;margin:0 0 8px;color:#fff}
+.tip-banner p{font-size:15px;max-width:720px;margin:0;color:#d8ece0}
+.tip-banner .button-secondary{flex-shrink:0}
+@media(max-width:900px){
+ .page-hero{grid-template-columns:1fr;padding:36px;gap:18px}
+ .hero-illustration{min-height:180px}
+ .hero-illustration-card{transform:none}
+ .form-layout{grid-template-columns:1fr}
+ .learning-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+ .site-app .page-container{width:min(calc(100% - 32px),1200px);padding:25px 0 56px}
+ .site-app h1{font-size:36px;letter-spacing:-1.1px}
+ .page-hero{padding:27px 23px;min-height:unset;border-radius:18px}
+ .hero-illustration{min-height:185px}
+ .hero-illustration-card{width:min(100%,285px);padding:17px;min-height:140px}
+ .hero-emoji-row{font-size:30px}
+ .hero-emoji-row span{width:52px;height:52px}
+ .hero-mini-note{font-size:11px;padding:9px}
+ .section-heading{align-items:start;flex-direction:column}
+ .site-app .grid,.learning-grid,.stats-row{grid-template-columns:1fr}
+ .site-app .feature-link{min-height:unset}
+ .tip-banner{align-items:start;flex-direction:column;padding:24px}
+ .section-slab{padding:23px}
+}
+
+/* Acciones destructivas: misma altura que los botones de la plataforma. */
+.site-app .button-danger{
+    min-height:50px;padding:13px 22px;border-radius:10px;
+    border:1px solid #d9a5a0;color:#982f29;background:#fff6f5;
+    cursor:pointer;font:700 15px "Segoe UI",system-ui,sans-serif;
+}
+.site-app .button-danger:hover{background:#fae3e0}
+.site-app .actions form{display:inline-flex;margin:0;padding:0;width:auto;box-shadow:none;background:transparent;border:0}

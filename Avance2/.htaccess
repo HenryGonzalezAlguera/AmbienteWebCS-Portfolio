@@ -1,0 +1,5 @@
+# Los módulos internos y la configuración nunca deben abrirse vía HTTP.
+<FilesMatch "^(?:db_config(?:\.local|\.example)?|smtp_config(?:\.local|\.example)?|smtp_mailer|csrf|security_rate_limit)\.php$">
+  Require all denied
+</FilesMatch>
+Options -Indexes

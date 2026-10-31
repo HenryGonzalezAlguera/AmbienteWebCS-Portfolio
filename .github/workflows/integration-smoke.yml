@@ -1,0 +1,235 @@
+name: MySQL and PHP integration smoke tests
+
+on:
+  push:
+    branches:
+      - main
+      - portfolio/recuperacion-seguridad-2026
+  pull_request:
+    paths:
+      - 'Avance2/**'
+      - 'database/**'
+      - 'scripts/**'
+      - '.github/workflows/integration-smoke.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci_test_only_password
+          MYSQL_ROOT_HOST: '%'
+          MYSQL_DATABASE: reduccion_desperdicio_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci_test_only_password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=15
+    env:
+      CI_SMOKE: '1'
+      DB_HOST: 127.0.0.1
+      DB_PORT: '3306'
+      DB_NAME: reduccion_desperdicio_ci
+      DB_USER: root
+      DB_PASSWORD: ci_test_only_password
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure PHP MySQL extension exists
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y php-mysql
+          php -m | grep -qi mysqli
+      - name: Install PHPMailer with Composer
+        run: |
+          if ! command -v composer >/dev/null; then
+            sudo apt-get install -y composer
+          fi
+          composer validate --no-check-publish
+          composer install --no-interaction --no-progress --prefer-dist
+      - name: Test SMTP settings without sending real emails
+        env:
+          APP_BASE_URL: http://localhost/AmbienteWebCS-SMTP/Avance2
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: '587'
+          SMTP_ENCRYPTION: tls
+          SMTP_USER: smtp-test@example.invalid
+          SMTP_PASSWORD: ci-test-only-not-a-real-credential
+          MAIL_FROM: smtp-test@example.invalid
+          MAIL_FROM_NAME: AmbienteWebCS
+        run: php scripts/check_smtp_config.php
+      - name: Validate session cookies and rate limiting
+        run: php scripts/test_security.php
+      - name: Validate schema and database operations
+        run: php scripts/smoke_db.php
+      - name: Start local test server
+        run: |
+          php -S 127.0.0.1:8080 -t Avance2 > /tmp/ambientewebcs-php.log 2>&1 &
+          sleep 2
+      - name: Exercise HTTP registration, login, recipes and donations
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -D /tmp/registro_headers -o /tmp/registro_body \
+            -d "nombre=Prueba+HTTP" -d "email=prueba-http@example.invalid" \
+            -d "password=PruebaSegura2026!" -d "confirmar_password=PruebaSegura2026!" \
+            http://127.0.0.1:8080/registro.php
+          grep -qi 'location: login.html?registered=1' /tmp/registro_headers
+          curl -fsS -c /tmp/auth_cookies -D /tmp/login_headers -o /tmp/login_body \
+            -d "email=prueba-http@example.invalid" -d "password=PruebaSegura2026!" \
+            http://127.0.0.1:8080/login.php
+          grep -qi 'location: index.html' /tmp/login_headers
+          # La respuesta de recuperación nunca confirma si una cuenta existe.
+          curl -fsS -d "email=prueba-http@example.invalid" \
+            http://127.0.0.1:8080/recuperar_contrasena.php > /tmp/reset_known
+          curl -fsS -d "email=inexistente@example.invalid" \
+            http://127.0.0.1:8080/recuperar_contrasena.php > /tmp/reset_unknown
+          grep -q 'Si existe una cuenta asociada' /tmp/reset_known
+          grep -q 'Si existe una cuenta asociada' /tmp/reset_unknown
+          grep -q 'Solicitud recibida' /tmp/reset_known
+          grep -q 'Solicitud recibida' /tmp/reset_unknown
+          curl -fsS -b /tmp/auth_cookies http://127.0.0.1:8080/session_status.php > /tmp/auth_status.json
+          python3 -c 'import json; d=json.load(open("/tmp/auth_status.json")); assert d["authenticated"] is True; assert len(d["logout_csrf"]) == 64'
+          token="$(python3 -c 'import json; print(json.load(open("/tmp/auth_status.json"))["logout_csrf"])')"
+          curl -fsS -b /tmp/auth_cookies -c /tmp/auth_cookies -D /tmp/logout_headers -o /tmp/logout_body \
+            --data-urlencode "csrf_logout=$token" http://127.0.0.1:8080/logout.php
+          grep -qi 'location: login.html?logout=1' /tmp/logout_headers
+          curl -fsS -b /tmp/auth_cookies http://127.0.0.1:8080/session_status.php \
+            | python3 -c 'import json,sys; assert json.load(sys.stdin)["authenticated"] is False'
+          # El usuario ya cerró sesión: sin autenticación no puede publicar recetas.
+          code="$(curl -sS -o /tmp/unauthorized_body -w '%{http_code}' \
+            -d "nombreReceta=Sin+Autorizacion" http://127.0.0.1:8080/nueva_receta.php)"
+          test "$code" = "401"
+          # Un visitante tampoco puede registrar donaciones, ni siquiera con CSRF válido.
+          curl -fsS -c /tmp/guest_cookies http://127.0.0.1:8080/session_status.php > /tmp/guest_status.json
+          guest_csrf="$(python3 -c 'import json; d=json.load(open("/tmp/guest_status.json")); assert d["authenticated"] is False; print(d["write_csrf"])')"
+          code="$(curl -sS -b /tmp/guest_cookies -o /tmp/unauthorized_donation -w '%{http_code}' \
+            --data-urlencode "csrf_token=$guest_csrf" -d "nombre_donante=Invitado" \
+            -d "alimento=Arroz" -d "cantidad=2" -d "punto_recoleccion=Prueba" \
+            http://127.0.0.1:8080/registrar_donacion.php)"
+          test "$code" = "401"
+          # Recuperar una sesión autenticada y el token CSRF del mismo navegador.
+          curl -fsS -c /tmp/author_cookies -D /tmp/relogin_headers -o /tmp/relogin_body \
+            -d "email=prueba-http@example.invalid" -d "password=PruebaSegura2026!" \
+            http://127.0.0.1:8080/login.php
+          grep -qi 'location: index.html' /tmp/relogin_headers
+          curl -fsS -b /tmp/author_cookies http://127.0.0.1:8080/session_status.php > /tmp/form_session.json
+          csrf="$(python3 -c 'import json; print(json.load(open("/tmp/form_session.json"))["write_csrf"])')"
+          test "$(printf %s "$csrf" | wc -c)" -eq 64
+          # Sin token, ambos formularios deben rechazar solicitudes.
+          code="$(curl -sS -b /tmp/author_cookies -o /tmp/no_csrf_recipe -w '%{http_code}' \
+            -d "nombreReceta=Sin+Token" -d "ingredientes=Huevo" \
+            -d "instrucciones=Preparar" http://127.0.0.1:8080/nueva_receta.php)"
+          test "$code" = "403"
+          code="$(curl -sS -b /tmp/author_cookies -o /tmp/no_csrf_donation -w '%{http_code}' \
+            -d "nombre_donante=Sin+Token" -d "alimento=Arroz" \
+            -d "cantidad=2" -d "punto_recoleccion=Prueba" \
+            http://127.0.0.1:8080/registrar_donacion.php)"
+          test "$code" = "403"
+          # Con token y sesión válidos, las operaciones siguen funcionando.
+          curl -fsS -b /tmp/author_cookies -D /tmp/receta_headers -o /tmp/receta_body \
+            --data-urlencode "csrf_token=$csrf" \
+            -d "nombreReceta=Receta+HTTP" -d "ingredientes=Huevo" \
+            -d "instrucciones=Preparar+y+cocinar" \
+            http://127.0.0.1:8080/nueva_receta.php
+          grep -qi 'location: recetas.php?id=' /tmp/receta_headers
+          # Identificar la receta recién creada y verificar acciones de su propietario.
+          recipe_id="$(grep -i '^location: recetas.php?id=' /tmp/receta_headers | tr -d '\r' | sed -E 's/.*id=([0-9]+).*/\1/' | head -n 1)"
+          test -n "$recipe_id"
+          curl -fsS -b /tmp/author_cookies \
+            "http://127.0.0.1:8080/recetas.php?id=$recipe_id" | grep -q 'Editar receta'
+          # Nadie puede editar sin autorización ni token.
+          code="$(curl -sS -o /tmp/edit_unauth -w '%{http_code}' \
+            "http://127.0.0.1:8080/editar_receta.php?id=$recipe_id")"
+          test "$code" = "303"
+          code="$(curl -sS -b /tmp/author_cookies -o /tmp/edit_no_csrf -w '%{http_code}' \
+            -d "id=$recipe_id" -d "nombreReceta=Cambio+Sin+Token" \
+            -d "ingredientes=Huevo" -d "instrucciones=Preparar" \
+            http://127.0.0.1:8080/editar_receta.php)"
+          test "$code" = "403"
+          curl -fsS -b /tmp/author_cookies -D /tmp/edit_headers -o /tmp/edit_body \
+            --data-urlencode "csrf_token=$csrf" -d "id=$recipe_id" \
+            -d "nombreReceta=Receta+Actualizada" -d "ingredientes=Huevo" \
+            -d "instrucciones=Preparar+y+servir" \
+            http://127.0.0.1:8080/editar_receta.php
+          grep -qi "location: recetas.php?id=$recipe_id&updated=1" /tmp/edit_headers
+          curl -fsS -b /tmp/author_cookies \
+            "http://127.0.0.1:8080/recetas.php?id=$recipe_id" | grep -q 'Receta Actualizada'
+          # Segundo usuario: no puede editar ni borrar la receta del primero.
+          curl -fsS -d "nombre=Segundo+Usuario" -d "email=otro-http@example.invalid" \
+            -d "password=PruebaSegura2026!" -d "confirmar_password=PruebaSegura2026!" \
+            http://127.0.0.1:8080/registro.php > /tmp/second_register
+          curl -fsS -c /tmp/second_cookies -D /tmp/second_login_headers -o /tmp/second_login_body \
+            -d "email=otro-http@example.invalid" -d "password=PruebaSegura2026!" \
+            http://127.0.0.1:8080/login.php
+          grep -qi 'location: index.html' /tmp/second_login_headers
+          curl -fsS -b /tmp/second_cookies http://127.0.0.1:8080/session_status.php > /tmp/second_session.json
+          csrf_second="$(python3 -c 'import json; print(json.load(open("/tmp/second_session.json"))["write_csrf"])')"
+          code="$(curl -sS -b /tmp/second_cookies -o /tmp/other_edit -w '%{http_code}' \
+            "http://127.0.0.1:8080/editar_receta.php?id=$recipe_id")"
+          test "$code" = "404"
+          code="$(curl -sS -b /tmp/second_cookies -o /tmp/other_delete -w '%{http_code}' \
+            --data-urlencode "csrf_token=$csrf_second" -d "id=$recipe_id" \
+            http://127.0.0.1:8080/eliminar_receta.php)"
+          test "$code" = "404"
+          # El propietario puede borrar la receta con POST y CSRF.
+          code="$(curl -sS -b /tmp/author_cookies -o /tmp/delete_no_token -w '%{http_code}' \
+            -d "id=$recipe_id" http://127.0.0.1:8080/eliminar_receta.php)"
+          test "$code" = "403"
+          curl -fsS -b /tmp/author_cookies -D /tmp/delete_headers -o /tmp/delete_body \
+            --data-urlencode "csrf_token=$csrf" -d "id=$recipe_id" \
+            http://127.0.0.1:8080/eliminar_receta.php
+          grep -qi 'location: recetas_populares.php?deleted=1' /tmp/delete_headers
+          code="$(curl -sS -o /tmp/deleted_detail -w '%{http_code}' \
+            "http://127.0.0.1:8080/recetas.php?id=$recipe_id")"
+          test "$code" = "404"
+          curl -fsS -b /tmp/author_cookies \
+            --data-urlencode "csrf_token=$csrf" \
+            -d "nombre_donante=Donante+HTTP" \
+            -d "alimento=Arroz" -d "cantidad=3" \
+            -d "punto_recoleccion=Punto+de+prueba" \
+            http://127.0.0.1:8080/registrar_donacion.php | grep -q 'Donación registrada con éxito'
+          curl -fsS http://127.0.0.1:8080/api_recetas.php | python3 -c 'import sys,json; assert isinstance(json.load(sys.stdin),list)'
+          echo 'Pruebas HTTP básicas: OK'
+
+      - name: Exercise reset token single-use flow without sending mail
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Crear token de prueba sin correo externo, para un usuario registrado por el test HTTP.
+          php -r '
+            require "Avance2/db_config.php";
+            $email = "prueba-http@example.invalid";
+            $hash = hash("sha256", str_repeat("b", 64));
+            $expires = time() + 1800;
+            $stmt = $conn->prepare("DELETE FROM recuperacion_contrasena WHERE email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt = $conn->prepare("INSERT INTO recuperacion_contrasena (email, token_hash, expires) VALUES (?, ?, ?)");
+            $stmt->bind_param("ssi", $email, $hash, $expires);
+            $stmt->execute();
+          '
+          token="$(printf 'b%.0s' {1..64})"
+          curl -fsS -c /tmp/reset_cookie \
+            "http://127.0.0.1:8080/recuperar_contrasena_form.php?token=$token" > /tmp/reset_page
+          csrf="$(python3 -c 'import re; s=open("/tmp/reset_page").read(); print(re.search(r"name=\"csrf_token\" value=\"([a-f0-9]{64})\"",s).group(1))')"
+          curl -fsS -b /tmp/reset_cookie -o /tmp/reset_success \
+            --data-urlencode "token=$token" --data-urlencode "csrf_token=$csrf" \
+            --data-urlencode "nueva_contrasena=NuevaClaveSegura2026!" \
+            --data-urlencode "confirmar_contrasena=NuevaClaveSegura2026!" \
+            http://127.0.0.1:8080/recuperar_contrasena_form.php
+          grep -q 'Contraseña actualizada correctamente.' /tmp/reset_success
+          curl -fsS -b /tmp/reset_cookie -o /tmp/reset_used \
+            --data-urlencode "token=$token" --data-urlencode "csrf_token=$csrf" \
+            --data-urlencode "nueva_contrasena=OtraClaveSegura2026!" \
+            --data-urlencode "confirmar_contrasena=OtraClaveSegura2026!" \
+            http://127.0.0.1:8080/recuperar_contrasena_form.php
+          grep -q 'caducado o ya se utilizó' /tmp/reset_used
+          curl -fsS -D /tmp/reset_login_header -o /tmp/reset_login_body \
+            -d "email=prueba-http@example.invalid" -d "password=NuevaClaveSegura2026!" \
+            http://127.0.0.1:8080/login.php
+          grep -qi 'location: index.html' /tmp/reset_login_header
+          echo 'Token de recuperación de un solo uso: OK'

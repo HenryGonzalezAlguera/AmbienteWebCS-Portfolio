@@ -1,0 +1,13 @@
+{
+  "name": "henrygonzalezalguera/ambientewebcs",
+  "description": "Proyecto educativo de reducción de desperdicio alimentario",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.1",
+    "phpmailer/phpmailer": "^7.0"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

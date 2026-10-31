@@ -1,0 +1,42 @@
+name: PHP syntax validation
+
+on:
+  push:
+    branches:
+      - main
+      - portfolio/recuperacion-seguridad-2026
+  pull_request:
+    paths:
+      - 'Avance2/**'
+      - 'scripts/**'
+      - '.github/workflows/php-lint.yml'
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check PHP version
+        run: php -v
+      - name: Validate PHP syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          find Avance2 scripts -type f -name '*.php' -print0 | xargs -0 -r -n1 php -l
+      - name: Validate browser JavaScript syntax
+        run: |
+          node --check Avance2/site.js
+          node --check Avance2/auth.js
+      - name: Verify account form routes remain connected
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'action="login.php"' Avance2/login.html
+          grep -q 'name="email"' Avance2/login.html
+          grep -q 'name="password"' Avance2/login.html
+          grep -q 'action="registro.php"' Avance2/registro.html
+          grep -q 'name="confirmar_password"' Avance2/registro.html
+          grep -q 'action="recuperar_contrasena.php"' Avance2/recuperar_contrasena.html
+          grep -q 'href="auth.css"' Avance2/login.html
+          grep -q 'src="auth.js"' Avance2/login.html

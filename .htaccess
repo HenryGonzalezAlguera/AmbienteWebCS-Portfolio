@@ -1,0 +1,9 @@
+# Protección adicional para instalaciones Apache (XAMPP).
+Options -Indexes
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(?:vendor|database|docs|scripts|\.git)(?:/|$) - [F,L,NC]
+</IfModule>
+<FilesMatch "^(?:composer\.(?:json|lock)|README\.md|\.env(?:\..*)?)$">
+  Require all denied
+</FilesMatch>

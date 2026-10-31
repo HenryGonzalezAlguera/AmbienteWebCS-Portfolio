@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Donar alimentos | AmbienteWebCS</title><link rel="stylesheet" href="interior.css"></head><body class="site-app"><div class="app-shell"><header class="site-header"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">🌱</span><span>Ambiente<span class="brand-accent">WebCS</span></span></a><nav class="site-nav" aria-label="Navegación principal"><a href="recetas.html">Recetas</a><a href="donacion.html" aria-current="page">Donaciones</a><a href="mapa.html">Puntos de recolección</a><a href="educacion.html">Aprender</a></nav><div class="site-account"><a id="siteLogin" href="login.html" class="login-action">Iniciar sesión</a><div id="siteSigned" class="site-account" hidden><span id="siteUser" class="user-name"></span><form action="logout.php" method="post"><input type="hidden" id="siteLogoutCsrf" name="csrf_logout"><button type="submit">Cerrar sesión</button></form></div></div></header><main class="page-container">
+  <a class="return-link" href="index.html">← Volver al inicio</a>
+  <section class="page-hero" aria-labelledby="donationHeading">
+    <div class="hero-copy">
+      <p class="eyebrow">COMPARTIR TAMBIÉN ES CUIDAR</p>
+      <h1 id="donationHeading">Dale a los alimentos <em>una nueva oportunidad.</em></h1>
+      <p class="lede">Registra una donación de demostración de forma sencilla. Explora cómo podría organizarse la información de alimentos disponibles.</p>
+      <span class="pill-note">🤝 Proyecto académico · Función de prueba</span>
+    </div>
+    <div class="hero-illustration" aria-hidden="true">
+      <div class="hero-illustration-card">
+        <div class="hero-emoji-row"><span>🍎</span><span>🥦</span><span>🤝</span></div>
+        <small>Compromiso responsable</small>
+        <strong>Cada alimento cuenta</strong>
+      </div>
+      <div class="hero-mini-note">💚 Comparte con propósito</div>
+    </div>
+  </section>
+  <div class="section-heading"><div><p class="eyebrow">REGISTRO DE DEMOSTRACIÓN</p><h2>Completa la información</h2></div></div>
+  <div class="form-layout">
+    <section class="panel" id="donationAuthNotice" role="status">
+      <span class="tile-icon" aria-hidden="true">🔐</span>
+      <h2>Verificando sesión…</h2>
+      <p>Para registrar una donación, inicia sesión con tu cuenta.</p>
+      <div class="actions"><a href="login.html" class="button-primary">Iniciar sesión →</a><a href="registro.html" class="button-secondary">Crear cuenta</a></div>
+    </section>
+    <section class="panel" id="donationEditor" aria-labelledby="formTitle" hidden>
+      <h2 id="formTitle">Datos de la donación</h2>
+      <p class="lede" style="font-size:16px;margin-top:0">Los datos se guardarán en la base de pruebas de AmbienteWebCS.</p>
+      <form class="ui-form" data-csrf-write data-require-auth="true" action="registrar_donacion.php" method="post"><input type="hidden" name="csrf_token" value="">
+        <div class="form-field"><label for="nombre_donante">Nombre del donante</label><input id="nombre_donante" name="nombre_donante" type="text" maxlength="120" autocomplete="name" placeholder="Ej.: Persona de prueba" required></div>
+        <div class="form-field"><label for="alimento">Alimento disponible</label><input id="alimento" name="alimento" type="text" maxlength="180" placeholder="Ej.: Manzanas" required></div>
+        <div class="form-field"><label for="cantidad">Cantidad (unidades)</label><input id="cantidad" name="cantidad" type="number" min="1" max="1000000" step="1" placeholder="Ej.: 5" required></div>
+        <div class="form-field"><label for="punto_recoleccion">Ubicación de referencia</label><input id="punto_recoleccion" name="punto_recoleccion" type="text" maxlength="180" placeholder="Ej.: Punto de prueba" required><span class="form-hint">Indica una referencia de prueba, no una entrega acordada.</span></div>
+        <button class="primary" type="submit" disabled>Registrar donación →</button><p class="form-hint" data-security-message role="status" aria-live="polite">Preparando formulario seguro…</p>
+      </form>
+    </section>
+    <aside class="form-side">
+      <section class="panel">
+        <span class="tile-icon" aria-hidden="true">🌿</span>
+        <h2>Antes de compartir</h2>
+        <ul>
+          <li>Verifica que los alimentos estén en buen estado y sean seguros.</li>
+          <li>Comprueba las condiciones de conservación.</li>
+          <li>Confirma con la organización receptora antes de una entrega real.</li>
+        </ul>
+      </section>
+      <section class="section-slab">
+        <h2>¿Buscas inspiración?</h2>
+        <p>Los ingredientes también pueden aprovecharse en nuevas preparaciones.</p>
+        <div class="actions"><a href="recetas.html" class="button-secondary">Explorar recetas →</a></div>
+      </section>
+    </aside>
+  </div>
+  <div class="info-strip"><strong>Aviso:</strong> registrar una donación aquí no crea un compromiso de entrega ni confirma que un establecimiento reciba alimentos.</div>
+</main><footer class="site-footer"><span>© AmbienteWebCS · Proyecto educativo</span><span>Demostración de reducción de desperdicio alimentario</span></footer></div><script src="site.js" defer></script></body></html>

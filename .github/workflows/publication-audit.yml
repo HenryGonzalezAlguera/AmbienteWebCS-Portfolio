@@ -1,0 +1,14 @@
+name: Publication tree audit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check-public-tree:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check tracked source tree for sensitive artifacts
+        run: python3 scripts/publication_audit.py
